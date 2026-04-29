@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanzz Food</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background: linear-gradient(135deg, #fff8f0, #f1e3d3);
+}
+
+.hero {
+  background: linear-gradient(135deg, #6b3e26, #a47148);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.7);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.menu img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+button {
+  background: #27ae60;
+  border: none;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.badge {
+  background: #ff9800;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  margin-left: 5px;
+}
+
+.cart-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #6b3e26;
+  color: white;
+  padding: 15px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.cart-box {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 280px;
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  display: none;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #6b3e26;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>🌟 FIVE STARS 🌟</h1>
+  <p>🔥 Lagi Hits! Udah Banyak yang Coba & Ketagihan 🧋</p>
+</div>
+
+<div class="container">
+
+<h2>📝 Nama Customer</h2>
+<div class="card">
+<input type="text" id="namaCustomer" placeholder="Masukkan nama..." style="width:100%; padding:10px;">
+</div>
+
+<h2>🔥 Kenapa Harus Five Stars?</h2>
+<div class="card">
+<ul>
+<li>🥥 <b>Bahan Fresh & Berkualitas</b></li>
+<li>✨ <b>Resep Rahasia Spesial</b></li>
+<li>🧋 <b>Rasa Autentik & Bikin Nagih</b></li>
+<li>💸 <b>Harga Ramah Pelajar</b></li>
+<li>⚡ <b>Fresh & Cepat Disajikan</b></li>
+<li>🔥 <b>Udah Banyak yang Suka!</b></li>
+<li>🎯 <b>Cocok Semua Kalangan</b></li>
+</ul>
+</div>
+
+<h2>🍽️ Menu</h2>
+
+<!-- CENDOL -->
+<div class="card menu">
+<img src="https://tse2.mm.bing.net/th/id/OIP.4R_hUXNZ0JpAu0CSFVqzIgAAAA?w=360">
+<div>
+<b>Cendol Secret <span class="badge">Best Seller</span></b>
+<p>Minuman segar khas dengan rasa autentik</p>
+<p><b>Rp 8.000</b></p>
+</div>
+<button onclick="tambah('Cendol Secret',8000)">+ Tambah</button>
+</div>
+
+<!-- AKAR KELAPA -->
+<div class="card menu">
+<img src="https://5.imimg.com/data5/ECOM/Default/2022/12/FM/BC/VK/13510045/screenshot2020-10-31at11-13-02pm-500x500.png">
+<div>
+<b>Akar Kelapa</b>
+<p>Cemilan gurih & renyah</p>
+<p><b>Rp 8.000</b></p>
+</div>
+<button onclick="tambah('Akar Kelapa',10000)">+ Tambah</button>
+</div>
+
+<!-- PAKET -->
+<div class="card menu">
+<img src="https://img.lovepik.com/png/20231119/an-animated-star-with-eyes-that-is-smiling-clipart-vector_637905_wh1200.png">
+<div>
+<b>Paket Hemat Cendol + Akar Kelapa <span class="badge">Hemat</span></b>
+<p>Combo minuman & cemilan favorit</p>
+<p><b>Rp 12.000</b></p>
+</div>
+<button onclick="tambah('Paket Hemat (Cendol + Akar Kelapa)',15000)">+ Tambah</button>
+</div>
+
+</div>
+
+<div class="cart-btn" onclick="toggleCart()">
+🛒 (<span id="jumlah">0</span>)
+</div>
+
+<div class="cart-box" id="cartBox">
+<h3>Pesanan</h3>
+<ul id="list"></ul>
+
+<p><b>Total: Rp <span id="total">0</span></b></p>
+
+<button onclick="checkout()">Pesan via WhatsApp</button>
+
+<button onclick="clearCart()" style="background:#e74c3c; margin-top:10px;">
+❌ Cancel Pesanan
+</button>
+</div>
+
+<footer>🌟 FIVE STARS 🌟</footer>
+
+<script>
+let cart = [];
+let total = 0;
+
+function tambah(nama, harga){
+  cart.push({nama, harga});
+  total += harga;
+  document.getElementById("jumlah").innerText = cart.length;
+  render();
+}
+
+function render(){
+  let list = document.getElementById("list");
+  list.innerHTML = "";
+
+  cart.forEach((item, index) => {
+    let li = document.createElement("li");
+    li.innerHTML = item.nama + " - Rp " + item.harga.toLocaleString("id-ID") +
+    ' <button onclick="hapus('+index+')" style="background:red;margin-left:10px;">❌</button>';
+    list.appendChild(li);
+  });
+
+  document.getElementById("total").innerText = total.toLocaleString("id-ID");
+}
+
+function hapus(index){
+  total -= cart[index].harga;
+  cart.splice(index,1);
+  document.getElementById("jumlah").innerText = cart.length;
+  render();
+}
+
+function clearCart(){
+  if(confirm("Yakin mau cancel semua pesanan?")){
+    cart = [];
+    total = 0;
+    document.getElementById("jumlah").innerText = 0;
+    render();
+  }
+}
+
+function toggleCart(){
+  let box = document.getElementById("cartBox");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function checkout(){
+  let nama = document.getElementById("namaCustomer").value;
+
+  if(nama === ""){
+    alert("Isi nama dulu!");
+    return;
+  }
+
+  let pesan = "Halo, saya " + nama + " ingin pesan:\n\n";
+
+  cart.forEach(item => {
+    pesan += "- " + item.nama + " (Rp " + item.harga.toLocaleString("id-ID") + ")\n";
+  });
+
+  pesan += "\nTotal: Rp " + total.toLocaleString("id-ID");
+
+  window.open("https://wa.me/6281385088508?text=" + encodeURIComponent(pesan));
+}
+</script>
+
+</body>
+</html>
